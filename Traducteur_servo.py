@@ -1,28 +1,17 @@
-# Soumettez ce fichier via Brightspace
-# Ne modifiez pas la signature de la fonction.
-
 def traduit(angle: float) -> int:
-    """
-    Convertit un angle en degrés vers l'entrée correspondante
-    pour la méthode duty_u16 de la classe servo
+	"""
+	Convertit un angle en degrés vers l'entrée correspondante
+	pour la méthode duty_u16 de la classe servo
 
-    Voir https://docs.micropython.org/en/latest/library/machine.PWM.html pour plus
-    de détails sur la méthode duty_u16
-    """
+	Voir https://docs.micropython.org/en/latest/library/machine.PWM.html pour plus de
+	détails sur la méthode duty_u16
+	"""
 
-    # Verifie que l'angle respecte les limites
-    if angle < 0:
-        angle = 0
-    elif angle > 180:
-        angle = 180
+	MIN = 1638 # 0 degrés
+	MAX = 8192 # 180 degrés
+	DEG = (MAX - MIN) / 180 # valeur par degré
 
-    # Calcul de la largeur d'impulsion en microsecondes
-    largeur_impulsion = 500 + (2500 - 500) * (angle / 180)
+	# l'angle de serrage doit être compris entre 0 et 180
+	angle = max(0, min(180, angle))
 
-    # Conversion en rapport cyclique (0–1) 
-    cycle = largeur_impulsion / 20000  # 20 000 µs = 1 période (50 Hz)
-
-    # Conversion en valeur 16 bits pour duty_u16
-    duty = int(cycle * 65535)
-
-    return duty
+	return int(angle * DEG + MIN)
